@@ -27,8 +27,7 @@ function Register() {
         const data = {
             name: registerInput.name,
             email: registerInput.email,
-            password: registerInput.password,
-            
+            password: registerInput.password,            
         }
 
         axios.get('/sanctum/csrf-cookie').then(response => { // only when sanctum is used
@@ -47,7 +46,6 @@ function Register() {
             });
         });
     }
-
 
 
     return(
@@ -87,7 +85,7 @@ function Register() {
                     </div>
                 </div>
               </div>
-        </div>     
+        </div>    
       
       
     )
