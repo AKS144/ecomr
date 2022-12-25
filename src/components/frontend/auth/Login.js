@@ -32,14 +32,14 @@ function Login() {
 
         axios.get('/sanctum/csrf-cookie').then(response => {           
             axios.post('api/login', data).then(res => {
-                if(res.data.status == 200)
+                if(res.data.status === 200)
                 {
                     localStorage.setItem('auth_token',res.data.token); //from laravel app
                     localStorage.setItem('auth_name',res.data.username);
                     swal('Success',res.data.message,'success');
                     history.push('/');
                 }
-                else if(res.data.status == 401) 
+                else if(res.data.status === 401) 
                 {
                     swal('Warning',res.data.message,'warning');                    
                 }
