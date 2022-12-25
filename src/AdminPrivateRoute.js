@@ -34,7 +34,27 @@ function AdminPrivateRoute({...rest}){
         return Promise.reject();
     });
 
+    axios.interceptors.response.use(function(response){
+        return response;
+    }, function (error){
 
+        if(error.response.status === 403)//Access denied
+        {
+            swal("Forbidden",error.response.data.message,"warning");
+            history.push('/403');
+        }
+        else if(error.response.status === 401)//Access denied
+        {
+            swal("Unauthorized",error.response.data.message,"warning");
+            history.push('/401');
+        }
+        else if(error.response.status === 404)//Page not found
+        {
+            swal("404 Error","Page not found","warning");
+            history.push('/404');
+        }
+        return Promise.reject(error);
+    });
 
     if(loading)
     {

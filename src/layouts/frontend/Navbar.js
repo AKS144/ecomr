@@ -5,7 +5,6 @@ import axios from 'axios';
 import swal from 'sweetalert';
 
 
-
 function Navbar() {
 
     const history = useHistory();
