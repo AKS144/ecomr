@@ -40,7 +40,6 @@ function Login() {
                     if(res.data.role === 'admin')
                     {
                         history.push('/admin/dashboard');
-
                     }
                     else
                     {
