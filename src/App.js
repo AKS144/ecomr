@@ -2,11 +2,9 @@ import React from 'react';
 import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 import AdminPrivateRoute from './AdminPrivateRoute';
 
-//import MasterLayout from './layouts/admin/MasterLayout';
 import Home from './components/frontend/Home';
 import Login from './components/frontend/auth/Login';
 import Register from './components/frontend/auth/Register';
-import Page401 from './components/errors/Page401';
 import Page403 from './components/errors/Page403';
 import Page404 from './components/errors/Page404';
 

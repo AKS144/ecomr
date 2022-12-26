@@ -6,7 +6,7 @@ function Page404(){
             <div className="row justify-content-center">
             <div className="col-md-6">
                 <div className="card card-body">
-                    <h1>Page 403 | Page Not Found</h1>
+                    <h1>Page 404 | Page Not Found</h1>
                     <h3>URL/page searching not found</h3>
                 </div>
             </div>

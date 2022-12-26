@@ -18,12 +18,14 @@ function AdminPrivateRoute({...rest}){
             {
                 setAuthenticated(true);
             }
-            setLoading();
+            setLoading(false);
         });
+
         return () =>{
             setAuthenticated(false);
         };
     },[]);
+
 
     axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err){
         if(err.response.status === 401)
@@ -31,10 +33,11 @@ function AdminPrivateRoute({...rest}){
             swal("Unauthorized",err.response.data.message,"warning");
             history.push('/');
         }
-        return Promise.reject();
+        return Promise.reject(err);
     });
 
-    axios.interceptors.response.use(function(response){
+
+    axios.interceptors.response.use(function (response){
         return response;
     }, function (error){
 
@@ -42,18 +45,14 @@ function AdminPrivateRoute({...rest}){
         {
             swal("Forbidden",error.response.data.message,"warning");
             history.push('/403');
-        }
-        else if(error.response.status === 401)//Access denied
-        {
-            swal("Unauthorized",error.response.data.message,"warning");
-            history.push('/401');
-        }
+        }       
         else if(error.response.status === 404)//Page not found
         {
             swal("404 Error","Page not found","warning");
             history.push('/404');
         }
         return Promise.reject(error);
+        
     });
 
     if(loading)
