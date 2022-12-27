@@ -36,10 +36,10 @@ function ViewCategory() {
                     <td>{item.slug}</td>
                     <td>{item.status}</td>
                     <td>
-                        <Link to={`edit-category/${item.id}`} className="bt btn-succes btn-sm">Edit</Link>
+                        <Link to={`edit-category/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
                     </td>     
                     <td>
-                        <button type="button" className="bt btn-danger btn-sm">Delete</button>
+                        <button type="button" className="btn btn-danger btn-sm">Delete</button>
                     </td>             
                 </tr>
             )
