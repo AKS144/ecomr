@@ -63,12 +63,11 @@ function Category() {
         <div className="container-fluid px-4">
             <h1 className="mt-4">Add Category</h1>
 
-        {
-            display_errors.map( (item) =>{
-                return(<p className="mb-1" key={item}>{item}</p>)
-            })
-        }
-
+            {
+                display_errors.map( (item) =>{
+                    return(<p className="mb-1" key={item}>{item}</p>)
+                })
+            }
 
             <form onSubmit={submitCategory} id="CATEGORY_FORM">
                 <ul className="nav nav-tabs" id="myTab" role="tablist">
