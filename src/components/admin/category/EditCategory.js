@@ -15,6 +15,7 @@ function EditCategory(props)
     useEffect(() =>{
 
         var category_id = props.match.params.id;
+        
         axios.get(`/api/edit-category/${category_id}`).then(res=>{
             if(res.data.status === 200)
             {

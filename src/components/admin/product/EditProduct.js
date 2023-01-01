@@ -1,12 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import swal from 'sweetalert';
 
 
-function AddProduct() 
+function EditProduct(props) 
 {
+    const history = useHistory();
     const [categorylist, setCategorylist] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [picture, setPicture] = useState([]);//for image
+    const [errorlist, setError] = useState([]);//for image
+    const [allcheckbox, setCheckbox] = useState([]);
 
     const [productInput, setProduct] = useState({
         category_id: '',
@@ -22,28 +27,9 @@ function AddProduct()
         original_price: '',
         quantity: '',
         brand: '',
-       // image: '',
-        featured: '',
-        popular: '',
-        status: '',
+
     });
-    
-
-    useEffect(() =>{
-
-        axios.get(`/api/all-category`).then(res=>{
-            if(res.data.status === 200)
-            {
-                setCategorylist(res.data.category);
-            }
-        });
-
-    }, []);
-
-
-    const [picture, setPicture] = useState([]);//for image
-    const [errorlist, setError] = useState([]);//for image
-
+           
 
     const handleInput = (e) =>{
         e.persist();
@@ -54,11 +40,49 @@ function AddProduct()
         setPicture({ image: e.target.files[0] });
     }
 
-    const submitProduct = (e) =>{
+   
+    const handleCheckbox = (e) =>{
+        e.persist();
+        setCheckbox({...allcheckbox, [e.target.name]:e.target.checked });
+    }
+
+
+    useEffect(() =>{
+
+        axios.get(`/api/all-category`).then(res=>{
+            if(res.data.status === 200)
+            {
+                setCategorylist(res.data.category);
+            }
+        });
+
+        var product_id = props.match.params.id;
+
+        axios.get(`/api/edit-product/${product_id}`).then(res=>{
+            if(res.data.status === 200)
+            {
+                //console.log(res.data.product);
+                setProduct(res.data.product);
+                setCheckbox(res.data.product);
+            }
+            else if(res.data.status === 404)
+            {
+                swal("Error",res.data.message,"error");
+                history.push('/admin/view-product');
+            }
+            setLoading(false);
+        });
+
+    }, [props.match.params.id, history]);
+
+
+
+    const updateProduct = (e) =>{
         e.preventDefault();
 
-        const formData = new FormData();
+        const product_id = props.match.params.id;
 
+        const formData = new FormData();
         formData.append('image', picture.image);
 
         formData.append('category_id',productInput.category_id);
@@ -74,36 +98,17 @@ function AddProduct()
         formData.append('original_price',productInput.original_price);
         formData.append('quantity',productInput.quantity);
         formData.append('brand',productInput.brand);
-        formData.append('featured',productInput.featured);
-      
-        formData.append('popular',productInput.popular);
-        formData.append('status',productInput.status);
+
+        formData.append('featured',allcheckbox.featured ? '1':'0' );      
+        formData.append('popular',allcheckbox.popular ? '1':'0' );
+        formData.append('status',allcheckbox.status ? '1':'0' );
     
 
-        axios.post(`/api/store-product`, formData).then(res=>{
+        axios.post(`/api/update-product/${product_id}`, formData).then(res=>{
             if(res.data.status === 200)
             {
                 swal("Success",res.data.message,'success');
-                setProduct({...productInput,
-                    category_id: '',
-                    slug: '',
-                    name: '',
-                    description: '',
-            
-                    meta_title: '',
-                    meta_keyword: '',
-                    meta_desc: '',
-            
-                    selling_price: '',
-                    original_price: '',
-                    quantity: '',
-                    brand: '',
-                   // image: '',
-                    featured: '',
-                    popular: '',
-                    status: '',
-
-                });
+               // console.log(allcheckbox);
                 setError([]);
             }
             else if(res.data.status === 422)
@@ -111,7 +116,19 @@ function AddProduct()
                 swal("All fields are mandatory","","error");
                 setError(res.data.errors);
             }
+            else if(res.data.status === 404)
+            {
+                swal("Error",res.data.message,"error");
+                history.push('/admin/view-product');
+            }
         });
+    }
+
+
+
+    if(loading)
+    {
+        return <h4>Edit Product Data Loading...</h4>
     }
 
 
@@ -119,12 +136,12 @@ function AddProduct()
         <div className="container-fluid px-4">
             <div className="card mt-4">
                 <div className="card-header">
-                    <h4>AddProduct
+                    <h4>Edit Product
                         <Link to="/admin/view-product" className="btn btn-primary btn-sm float-end">View Product</Link>
                     </h4>
                 </div>
                 <div className="card-body">
-                    <form onSubmit={submitProduct} encType="multipart/form-data">                   
+                    <form onSubmit={updateProduct} encType="multipart/form-data">                   
                         <ul className="nav nav-tabs" id="myTab" role="tablist">
                             <li className="nav-item" role="presentation">
                                 <button className="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Home</button>
@@ -166,7 +183,7 @@ function AddProduct()
                                 </div> 
                                 <div className="form-group mb-3">
                                     <label>Description</label>
-                                    <textarea name="description"  onChange={handleInput} value={productInput.small_desc} className="form-control"></textarea>
+                                    <textarea name="description"  onChange={handleInput} value={productInput.description} className="form-control"></textarea>
                                     {/* <small className="text-danger">{errorlist.description}</small>                                     */}
                                 </div> 
 
@@ -211,19 +228,20 @@ function AddProduct()
                                     <div className="col-md-8 form-group mb-3">
                                         <label>Image</label>
                                         <input type="file" name="image" onChange={handleImage} className="form-control" />
+                                        <img src={`http://localhost:8000/${productInput.image}`} width="50px" alt="" />
                                         <small className="text-danger">{errorlist.image}</small>  
                                     </div>
                                     <div className="col-md-4 form-group mb-3">
                                         <label>Featured (Checked-shown)</label>
-                                        <input type="checkbox" name="featured" onChange={handleInput} value={productInput.featured} className="w-50 h-50" />
+                                        <input type="checkbox" name="featured" onChange={handleCheckbox} defaultChecked={allcheckbox.featured === 1 ? 'true':false } className="w-50 h-50" />
                                     </div>
                                     <div className="col-md-4 form-group mb-3">
                                         <label>Popular (checked-shown)</label>
-                                        <input type="checkbox" name="popular" onChange={handleInput} value={productInput.popular} className="w-50 h-50" />
+                                        <input type="checkbox" name="popular" onChange={handleCheckbox} defaultChecked={allcheckbox.popular === 1 ? 'true':false } className="w-50 h-50" />
                                     </div>
                                     <div className="col-md-4 form-group mb-3">
                                         <label>Status (Checked-hidden)</label>
-                                        <input type="checkbox" name="status" onChange={handleInput} value={productInput.status} className="w-50 h-50" />
+                                        <input type="checkbox" name="status" onChange={handleCheckbox} defaultChecked={allcheckbox.status === 1 ? 'true':false } className="w-50 h-50" />
                                     </div>
                                 </div>
                             </div>           
@@ -237,4 +255,4 @@ function AddProduct()
     )
 }
 
-export default AddProduct;
+export default EditProduct;
