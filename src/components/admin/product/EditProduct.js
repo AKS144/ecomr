@@ -233,15 +233,15 @@ function EditProduct(props)
                                     </div>
                                     <div className="col-md-4 form-group mb-3">
                                         <label>Featured (Checked-shown)</label>
-                                        <input type="checkbox" name="featured" onChange={handleCheckbox} defaultChecked={allcheckbox.featured === 1 ? 'true':false } className="w-50 h-50" />
+                                        <input type="checkbox" name="featured" onChange={handleCheckbox} defaultChecked={allcheckbox.featured === 1 ? 'checked':null } className="w-50 h-50" />
                                     </div>
                                     <div className="col-md-4 form-group mb-3">
                                         <label>Popular (checked-shown)</label>
-                                        <input type="checkbox" name="popular" onChange={handleCheckbox} defaultChecked={allcheckbox.popular === 1 ? 'true':false } className="w-50 h-50" />
+                                        <input type="checkbox" name="popular" onChange={handleCheckbox} defaultChecked={allcheckbox.popular === 1 ? 'checked':null } className="w-50 h-50" />
                                     </div>
                                     <div className="col-md-4 form-group mb-3">
                                         <label>Status (Checked-hidden)</label>
-                                        <input type="checkbox" name="status" onChange={handleCheckbox} defaultChecked={allcheckbox.status === 1 ? 'true':false } className="w-50 h-50" />
+                                        <input type="checkbox" name="status" onChange={handleCheckbox} defaultChecked={allcheckbox.status === 1 ? 'checked':null } className="w-50 h-50" />
                                     </div>
                                 </div>
                             </div>           

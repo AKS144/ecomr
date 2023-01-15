@@ -8,8 +8,6 @@ import ViewProduct from '../components/admin/product/ViewProduct';
 import EditProduct from '../components/admin/product/EditProduct';
 
 
-
-
 const routes = [
     { path: '/admin', exit: true, name: 'Admin'},
     { path: '/admin/dashboard', exact: true, name: 'Dashboard',component: Dashboard},

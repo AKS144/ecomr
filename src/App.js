@@ -1,8 +1,12 @@
 import React from 'react';
 import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 import AdminPrivateRoute from './AdminPrivateRoute';
+import PublicRoute from './PublicRoute';
 
-import Home from './components/frontend/Home';
+// import Home from './components/frontend/Home';
+// import About from './components/frontend/About';
+// import Contact from './components/frontend/Contact';
+
 import Login from './components/frontend/auth/Login';
 import Register from './components/frontend/auth/Register';
 import Page403 from './components/errors/Page403';
@@ -14,6 +18,8 @@ import axios from 'axios';
 axios.defaults.baseURL = "http://localhost:8000/";
 axios.defaults.headers.post['Content-Type'] = 'application/json'; //for json format accept
 axios.defaults.headers.post['Accept'] = 'application/json'; 
+axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'; //for json format accept image in frontside
+
 
 axios.defaults.withCredentials = true;//cors for csrf token
 
@@ -30,10 +36,21 @@ function App() {
     <div className="App">
      <Router>
       <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/403" component={Page403} />
-        <Route exact path="/404" component={Page404} />
+        {/* <Route exact path="/" component={Home} />
+        <Route path="/about" component={About} />
+        <Route path="/contact" component={Contact} /> */}
+       
 
+
+
+        {/* <Route path="/admin" name="Admin" render={(props) => <MasterLayout {...props}/>} /> */}
+        <AdminPrivateRoute path="/admin" name="Admin" />
+        {/* hide this PublicRoute */}
+        <PublicRoute path="/" name="Home" />
+        <Route path="/403" component={Page403} />
+        <Route path="/404" component={Page404} />
+
+        {/* unhide login and register */}
         {/* <Route path="/login" component={Login} />
         <Route path="/register" component={Register} /> */}
         <Route path="/login">        
@@ -44,8 +61,7 @@ function App() {
           {localStorage.getItem('auth_token') ? <Redirect to='/' /> : <Register />}  
         </Route>
 
-        {/* <Route path="/admin" name="Admin" render={(props) => <MasterLayout {...props}/>} /> */}
-        <AdminPrivateRoute path="/admin" name="Admin" />
+     
 
       </Switch>
      </Router>

@@ -1,10 +1,10 @@
 import React from 'react';
-import Navbar from '../../layouts/frontend/Navbar';
+// import Navbar from '../../layouts/frontend/Navbar';
 
 function Contact() {
     return(
         <div>
-            <Navbar />
+            {/* <Navbar /> */}
             <h1>Contact</h1>
 
         </div>       
